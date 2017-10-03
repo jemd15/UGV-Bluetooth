@@ -19,7 +19,7 @@ float VEL = 0;   // VELOCIDAD MOTORES
 float balanceAdelante; //compensación de avance motores
 float balanceAtras; //compensación de avance motores
 float viraje = 0.4;
-#define lucesDelanteras 12 // pin de salida para 2 luces led delanteras de alto brillo blancas
+#define lucesDelanteras    Z   12 // pin de salida para 2 luces led delanteras de alto brillo blancas
 #define lucesTraseras 2 //pin de salida para luz led inferior de color azul
 int modo; // contador para intercambiar el uso de la barra entre velocidad y ángulo de la torreta
 int velTorreta; //velocidad de giro de la torreta
