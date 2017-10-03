@@ -4,25 +4,29 @@
 // Optimizado por Carlos Escobar Javier Muñoz y José López
 
 #include <Servo.h> //incluimos la libreria para manejar el servo motor (torreta)
+#include <SoftwareSerial.h> //incluimos una librería para adicionar puertos de comunicación serial
 
-int ENB = 6;   // ENABLE B
-int IN4 = 7;   // MOTOR B
-int IN3 = 8;   // MOTOR B
-int IN2 = 9;   // MOTOR A
-int IN1 = 10;   // MOTOR A
-int ENA = 11;  // ENABLE A
+#define ENB 2   // ENABLE B
+#define IN4 3   // MOTOR B
+#define IN3 4   // MOTOR B
+#define IN2 5   // MOTOR A
+#define IN1 6   // MOTOR A
+#define ENA 7  // ENABLE A
+#define rx 8 //rx
+#define tx 9 //tx
 int laserPin = 5; //Laser
 float VEL = 0;   // VELOCIDAD MOTORES
 float balanceAdelante; //compensación de avance motores
 float balanceAtras; //compensación de avance motores
 float viraje = 0.4;
-int lucesDelanteras = 12; // pin de salida para 2 luces led delanteras de alto brillo blancas
-int lucesTraseras = 2; //pin de salida para luz led inferior de color azul
+#define lucesDelanteras 12 // pin de salida para 2 luces led delanteras de alto brillo blancas
+#define lucesTraseras 2 //pin de salida para luz led inferior de color azul
 int modo; // contador para intercambiar el uso de la barra entre velocidad y ángulo de la torreta
 int velTorreta; //velocidad de giro de la torreta
 char comando; //variable que indica la acción a tomar
 int torretaDetenida; // variable que contiene el valor correspondiente a la velocidad 0 de la torreta
 Servo torreta; //creamos el servo torreta
+SoftwareSerial bluetooth(rx,tx); //seteamos los pines de la comunicación serial extra
 
 void setup() {
   pinMode(ENA, OUTPUT);
@@ -35,7 +39,7 @@ void setup() {
   pinMode(lucesTraseras, OUTPUT);
   pinMode(laserPin, OUTPUT);
   Serial.begin(9600);
-  Serial1.begin(9600);
+  bluetooth.begin(9600);
   balanceAdelante = 0.95  ; // VEL * 0.1 solo si es necesario compensar
   balanceAtras = 0.98 ; // VEL * 0.2 solo si es necesario compensar
   torreta.attach(2); //adjuntamos el servo al pin 2{
@@ -48,8 +52,8 @@ void setup() {
 
 
 void loop() {
-  if (Serial1.available() > 0) {
-    comando = Serial1.read();
+  if (bluetooth.available() > 0) {
+    comando = bluetooth.read();
     switch (comando) {
       case 'F': //Abanzar
         analogWrite(ENA, VEL /* * balanceAdelante*/);
